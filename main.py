@@ -157,3 +157,4 @@ async def delete_student(id : str):
     filter_criteria = {"roll_number": id_int}
     collection.delete_one(filter_criteria)
     return {}
+
