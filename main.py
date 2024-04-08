@@ -61,13 +61,26 @@ else:
 
 @app.post("/students", response_model = StudentId, description="API to create a student in the system. All fields are mandatory and required while creating the student in the system.")
 async def Create_Students(student_data: StudentCreate):
-    global next_roll_number
+    next_roll_number = 1
+    roll_number_counter = db['counters'].find_one_and_update(
+        {'_id': 'roll_number'},
+        {'$inc': {'seq': 1}},
+        upsert=True,
+        return_document=True
+    )
+
+    if roll_number_counter:
+        next_roll_number = roll_number_counter['seq']
+    else:
+        next_roll_number = 1
+
+
     student_dict = student_data.dict()
+    next_roll_number += 1
 
     student_dict['roll_number'] = next_roll_number
     result = collection.insert_one(student_dict)
 
-    next_roll_number += 1
 
     return {"id": str(student_dict['roll_number'])} 
 
