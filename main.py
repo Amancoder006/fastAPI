@@ -4,6 +4,8 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 import urllib.parse
 import re
+import certifi
+ca = certifi.where()
 
 tags_metadata = [
     {
@@ -43,7 +45,7 @@ encoded_password = urllib.parse.quote_plus(password)
 uri = f"mongodb+srv://{encoded_username}:{encoded_password}@pythonapi.vaqhtlv.mongodb.net/?retryWrites=true&w=majority&appName=pythonAPI"
 
 # Create a new client and connect to the server
-client = MongoClient(uri, server_api=ServerApi('1'))
+client = MongoClient(uri, server_api=ServerApi('1'), tlsCAFile=ca)
 db = client['pythonAPI']
 collection = db['students']
 
